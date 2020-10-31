@@ -33,21 +33,21 @@ app.post("/", function(req, res){
   };
 
   mailchimp.setConfig({
-    apiKey: "**********api-key**********-us2",
+    apiKey: "***api-key***-us2",
     server: "us2",
   });
 
   const jsonData = JSON.stringify(data);
 
-  const url = "https://us2.api.mailchimp.com/3.0/lists/***list-id***";
+  const url = "https://us2.api.mailchimp.com/3.0/lists/*list-key*";
 
   const options = {
     method: "POST",
-    auth: "username:**********api-key**********-us2"
+    auth: "username:***api-key***-us2"
   }
 
   const run = async () => {
-  const response = await client.lists.batchListMembers("***list-id***", data);
+  const response = await client.lists.batchListMembers("*list-key*", data);
   console.log(response);
 };
 
@@ -75,6 +75,6 @@ app.post("/failure", function(req, res) {
   res.redirect("/");
 });
 
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function() {
   console.log("Server is running on port 3000");
 });
