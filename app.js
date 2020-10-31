@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const request = require("request");
 const https = require("https");
+const mailchimp = require("@mailchimp/mailchimp_marketing");
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.post("/", function(req, res){
     members: [
       {
         email_address: email,
-        status: "Subscribed",
+        status: "subscribed",
         merge_fields: {
           FNAME: firstName,
           LNAME: lastName
@@ -31,10 +32,47 @@ app.post("/", function(req, res){
     ]
   };
 
+  mailchimp.setConfig({
+    apiKey: "**********api-key**********-us2",
+    server: "us2",
+  });
+
   const jsonData = JSON.stringify(data);
 
+  const url = "https://us2.api.mailchimp.com/3.0/lists/***list-id***";
 
+  const options = {
+    method: "POST",
+    auth: "username:**********api-key**********-us2"
+  }
 
+  const run = async () => {
+  const response = await client.lists.batchListMembers("***list-id***", data);
+  console.log(response);
+};
+
+run();
+
+  const request = https.request(url, options, function(response) {
+
+    if (response.statusCode === 200) {
+      res.sendFile(__dirname + "/success.html");
+    } else {
+      res.sendFile(__dirname + "/failure.html");
+    }
+
+    response.on("data", function(data) {
+      console.log(JSON.parse(data));
+    });
+  });
+
+  request.write(jsonData);
+  request.end();
+
+});
+
+app.post("/failure", function(req, res) {
+  res.redirect("/");
 });
 
 app.listen(3000, function() {
