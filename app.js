@@ -33,21 +33,21 @@ app.post("/", function(req, res){
   };
 
   mailchimp.setConfig({
-    apiKey: "***api-key***-us2",
+    apiKey: "",
     server: "us2",
   });
 
   const jsonData = JSON.stringify(data);
 
-  const url = "https://us2.api.mailchimp.com/3.0/lists/*list-key*";
+  const url = "https://us2.api.mailchimp.com/3.0/lists/";
 
   const options = {
     method: "POST",
-    auth: "username:***api-key***-us2"
+    auth: "username:"
   }
 
   const run = async () => {
-  const response = await client.lists.batchListMembers("*list-key*", data);
+  const response = await mailchimp.lists.batchListMembers("", data);
   console.log(response);
 };
 
